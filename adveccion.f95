@@ -10,7 +10,7 @@ program advection
   integer :: i, nstep, Nx=100, nmax=1000
 
   ! Significado de las variables:
-  ! Nx: Resolución de la malla
+  ! Nx: Resolucion de la malla
   ! ncou: numero de Courant
   ! c: variable adimensional
   ! dt: salto en el tiempo
@@ -56,21 +56,21 @@ program advection
   open(3, file="advection-middle.dat", status="unknown")
   write(2, *)"step " ,"x ","U(x,tlim)"
   write(3, *)"step " ,"x ","U(x,t)"
-  nstep=1 ! inicializar contador de pasos
-  do while((t.le.tlim).or.(nstep.ge.nmax))
-     !condiciones de frontera
-     Up(0) = ul
-     Up(Nx+1) = ur
+ ! nstep=1 ! inicializar contador de pasos
+  do while(t.le.tlim)!.or.(nstep.ge.nmax))
      t = t + dt ! Salto en el tiempo
      c = a*dt/h
      do i=1, Nx        
         Up(i) = U(i) - c*(U(i)-U(i-1))
-        if  (nstep.eq.40) then 
+        if  ((t.lt.tlim/2. + 0.5*dt).and.(t.gt.tlim/2. - 0.5*dt)) then 
            write(3, *)i, i*h, Up(i)
         end if
      end do
+     !condiciones de frontera
+     Up(0) = Up(1)
+     Up(Nx+1) = Up(Nx)
      U=Up
-     nstep = nstep+1
+!     nstep = nstep+1
   end do
   do i=0, Nx+1
      write(2, *)i, i*h, U(i)
