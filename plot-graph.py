@@ -1,14 +1,23 @@
+
 import numpy as np
 import matplotlib.pyplot as plt
 from astropy.table import Table
-
+import argparse
 
 # The puropose of this program is to plot data from fortran scripts
 # This is a prototype which will be perfectioned over time
 
-data_inicial = Table.read("CI-advection.dat", format="ascii")
-data_final = Table.read("advection-final.dat", format="ascii")
-data_middle = Table.read("advection-middle.dat", format="ascii")
+parser = argparse.ArgumentParser(description="""choose which simulation you want to plot""")
+
+parser.add_argument("--data", type=str, default="advection", choices=["advection", "burguers"],
+                    help="choose the simulation you want to plot")
+
+cmd_args = parser.parse_args()
+filename_start = cmd_args.data
+
+data_inicial = Table.read("CI-"+filename_start+".dat", format="ascii")
+data_final = Table.read(filename_start+"-final.dat", format="ascii")
+data_middle = Table.read(filename_start+"-middle.dat", format="ascii")
 #Arrays with initial conditions
 x_CI = data_inicial["x"]
 U_CI = data_inicial["U(x,0)"]
@@ -29,4 +38,4 @@ plt.plot(x_f, U_f, label="Final state (t=1.5)")
 plt.legend()
 plt.xlabel("Length x")
 plt.ylabel("Conserved Quantity U")
-plt.savefig("advection.pdf")
+plt.savefig(filename_start+".pdf")
