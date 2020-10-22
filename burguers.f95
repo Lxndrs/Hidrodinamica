@@ -33,7 +33,7 @@ program burguers
   h = (xmax - xmin)/Nx ! definir malla espacial
  
   do i=1,Nx ! condiciones iniciales
-    U(i)=exp(-i**2*h)
+    U(i)=exp(-128*(i*h-0.25)**2)
   end do
   U(0)=U(1)
   U(Nx+1)=U(Nx)
